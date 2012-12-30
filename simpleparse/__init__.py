@@ -93,6 +93,5 @@ def setup_parser(**kwargs):
     return parser
 
 
-
 if __name__ == "__main__":
     parser = setup_parser()
