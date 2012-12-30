@@ -1,0 +1,4 @@
+import simpleparse
+
+PARSER = []
+SUBPARSERS = []
