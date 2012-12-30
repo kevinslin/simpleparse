@@ -19,7 +19,7 @@ class TestBaseClass(unittest.TestCase):
     def test_foo_subcommand(self):
         p = simpleparse.setup_parser(
             subparsers=simpleparse.SUBPARSERS,
-            funcs = globals())
+            commands = globals())
         ret = p.parse_args(["foo"])
         self.assertEqual(ret.fun(ret), "foo")
 

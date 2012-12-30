@@ -6,7 +6,6 @@ import argparse
 
 from simpleparse import settings
 import arguments
-import commands
 
 SUBPARSERS = "SUBPARSERS"
 PARSER = "PARSER"
@@ -69,16 +68,16 @@ def setup_parser(**kwargs):
     @param:
     parser
     subparsers
-    funcs - dictionary of functions
+    commands - dictionary of functions
     """
     #TODO: parser and subparser might share same kwargs
     parser = get_parser(**kwargs)
     subparser = get_subparser(**kwargs)
     cmds = get_subcommands(**kwargs)
-    funcs = kwargs.get("funcs", vars(commands))
+    commands = kwargs.get("commands", {})
     for cmd in cmds.values():
         cmd_parser = subparser.add_parser(cmd["name"])
-        cmd_parser.set_defaults(fun=funcs[cmd["name"]])
+        cmd_parser.set_defaults(fun=commands[cmd["name"]])
 
         for arg in cmd.get("arguments", []):
             name = arg["name"]
