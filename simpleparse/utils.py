@@ -1,4 +1,8 @@
 import os
+import sys
+
+from simpleparse import colors
+from simpleparse.settings import *
 
 def check_path(src, force = False):
     """
@@ -16,14 +20,21 @@ def check_path(src, force = False):
             resp = raw_input("Overwrite?[y|n] (n default):")
         if (resp.lower() == "y") or force:
             print("overwriting!")
-            if (os.path.isfile(src)):
-                os.remove(src)
-            else:
+            if (os.path.isdir(src)):
                 #TODO: check if dir is empty
-                os.path.rmdir(src)
+                os.rmdir(src)
+            else:
+                os.remove(src)
         else:
             return False
     return True
+
+def error_msg(msg):
+    """
+    return with error msg
+    """
+    print(colors.red(msg))
+    return ERROR
 
 
 def store_true(name, **kwargs):
