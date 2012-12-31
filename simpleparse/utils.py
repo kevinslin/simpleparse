@@ -1,7 +1,13 @@
+import os
+
 def check_path(src, force = False):
     """
     Check if path exists. Return true if available.
     If not, offer user a chance to delete
+    >>> os.path.exists(__file__)
+    True
+    >>> os.path.exists("badpath")
+    False
     """
     if os.path.exists(src):
         print("%s exists" % src)
@@ -22,6 +28,8 @@ def check_path(src, force = False):
 
 def store_true(name, **kwargs):
     """
+    Store true option for argparse. Sets default to be false
+
     @params:
     name - name of arg, multiple names separated by "|" key
     help - help message
