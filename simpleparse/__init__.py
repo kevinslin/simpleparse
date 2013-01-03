@@ -5,6 +5,7 @@ This makes making command line arguments a lot easier
 import argparse
 
 from simpleparse import settings
+import utils
 import arguments
 
 SUBPARSERS = "SUBPARSERS"
@@ -80,16 +81,16 @@ def setup_parser(**kwargs):
         cmd_parser.set_defaults(fun=commands[cmd["name"]])
 
         for arg in cmd.get("arguments", []):
-            name = arg["name"]
+            name = arg.pop("name")
+            # take care of multiple arguments
             if (type(name) is type("")):
                 name = [name]
             default = arg.get("default")
             if default is not None:
-                default = eval(default)
-            cmd_parser.add_argument(*name,
-                    help = arg.get("help"),
-                    default = default,
-                    action = arg.get("action"))
+                default = utils.save_eval(default)
+            utils.set_if_value_not_none(arg, 'default', default)
+            cmd_parser.add_argument(*name, **arg)
+
     return parser
 
 
