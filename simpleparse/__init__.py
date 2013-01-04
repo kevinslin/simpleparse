@@ -23,9 +23,9 @@ def get_parser(**kwargs):
     kwargs - same args as argument parser
     """
     _parser = argparse.ArgumentParser(
-        #TODO: do this properly
-        description=kwargs.get("description", settings.DESCRIPTION_PARSER),
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+            **_process_kwargs(kwargs)
+            )
     args = kwargs.get('arguments', {})
     for arg in args:
         _add_argument(_parser, arg)
@@ -38,8 +38,8 @@ def get_subparser(parser, **kwargs):
     @param:
     help - help string
     """
-    _subparsers = parser.add_subparsers(
-        help=kwargs.get("help", settings.HELP_SUBPARSER))
+    #TODO: check for special args in kwargs
+    _subparsers = parser.add_subparsers(**kwargs)
     return _subparsers
 
 
@@ -78,7 +78,10 @@ def setup_parser(**kwargs):
     funcs = kwargs_funcs
 
     for cmd in subcmds.values():
-        cmd_parser = subparser.add_parser(cmd["name"])
+        cmd_parser = subparser.add_parser(
+                cmd["name"],
+                **_process_kwargs(cmd)
+                )
         cmd_parser.set_defaults(fun=funcs[cmd["name"]])
 
         for arg in cmd.get("arguments", []):
@@ -98,12 +101,30 @@ def _add_argument(parser, arg):
         name = [name]
     # special values
     #TODO: type, and other special values
+    #TODO: use _process_kwargs
     default = arg.get("default")
     if default is not None:
         default = utils.save_eval(default)
     utils.set_if_value_not_none(arg, 'default', default)
 
     parser.add_argument(*name, **arg)
+
+
+def _process_kwargs(kwargs):
+    """
+    Sanitizes kwargs for add_parser
+    """
+    #TODO: better sanitization
+    out = {}
+    ignore = ["arguments", "name"]
+    for k in kwargs.keys():
+        v = kwargs[k]
+        if k in ignore:
+            continue
+        else:
+            out[k] = v
+    return out
+
 
 
 
