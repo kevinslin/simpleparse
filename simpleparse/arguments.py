@@ -1,4 +1,5 @@
 import simpleparse
 
 PARSER = []
-SUBPARSERS = []
+SUBPARSER = []
+SUBCOMMANDS = []

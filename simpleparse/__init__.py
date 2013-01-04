@@ -20,45 +20,40 @@ def get_parser(**kwargs):
     """
     Get the default parser
     @param:
-    description - description of arg parser
+    kwargs - same args as argument parser
     """
-    global _parser
-
-    if _parser is None:
-        _parser = argparse.ArgumentParser(
-            description=kwargs.get("description", settings.DESCRIPTION_PARSER),
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    _parser = argparse.ArgumentParser(
+        #TODO: do this properly
+        description=kwargs.get("description", settings.DESCRIPTION_PARSER),
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    args = kwargs.get('arguments', {})
+    for arg in args:
+        _add_argument(_parser, arg)
     return _parser
 
 
-def get_subparser(**kwargs):
+def get_subparser(parser, **kwargs):
     """
     Get default subparser
     @param:
     help - help string
     """
-    global _parser, _subparsers
-
-    if _parser is None:
-        _parser = get_parser()
-
-    _subparsers = _parser.add_subparsers(
+    _subparsers = parser.add_subparsers(
         help=kwargs.get("help", settings.HELP_SUBPARSER))
     return _subparsers
 
 
-def get_subcommands(**kwargs):
+def get_subcommands(subcmds):
     """
-    Get all subcommands
+    Return dictionary mapping subcmd to args
     @param:
-    subparsers - dictionary to configure subparsers
+    subcmds - list of subcommands
     """
-    global _subcommands
-
-    if _subcommands is None:
-        _subcommands = {}
-        for arg in kwargs.get("subparsers", arguments.SUBPARSERS):
-            _subcommands[arg['name']] = arg
+    _subcommands = {}
+    if (subcmds is None):
+        subcmds = []
+    for arg in subcmds:
+        _subcommands[arg['name']] = arg
     return _subcommands
 
 
@@ -67,31 +62,49 @@ def setup_parser(**kwargs):
     Bootstrap Parser
 
     @param:
-    parser
-    subparsers
-    commands - dictionary of functions
+    parser - config parser
+    subparser - config subparser
+    subcommands - arguments for subparser
+    funcs - dictionary of functions that subparsers will execute
     """
-    #TODO: parser and subparser might share same kwargs
-    parser = get_parser(**kwargs)
-    subparser = get_subparser(**kwargs)
-    cmds = get_subcommands(**kwargs)
-    commands = kwargs.get("commands", {})
-    for cmd in cmds.values():
+    kwargs_parser = kwargs.get('parser', {})
+    kwargs_subparser = kwargs.get('subparser', {})
+    arg_subcommand = kwargs.get('subcommands', [])
+    kwargs_funcs = kwargs.get('funcs', {})
+
+    parser = get_parser(**kwargs_parser)
+    subparser = get_subparser(parser, **kwargs_subparser)
+    subcmds = get_subcommands(arg_subcommand)
+    funcs = kwargs_funcs
+
+    for cmd in subcmds.values():
         cmd_parser = subparser.add_parser(cmd["name"])
-        cmd_parser.set_defaults(fun=commands[cmd["name"]])
+        cmd_parser.set_defaults(fun=funcs[cmd["name"]])
 
         for arg in cmd.get("arguments", []):
-            name = arg.pop("name")
-            # take care of multiple arguments
-            if (type(name) is type("")):
-                name = [name]
-            default = arg.get("default")
-            if default is not None:
-                default = utils.save_eval(default)
-            utils.set_if_value_not_none(arg, 'default', default)
-            cmd_parser.add_argument(*name, **arg)
+            _add_argument(cmd_parser, arg)
 
     return parser
+
+def _add_argument(parser, arg):
+    """
+    Translate arguments into params for add_argument
+    and add to parser
+    @param:
+    arg - dictionary of key value pairs for argument
+    """
+    name = arg.pop('name')
+    if isinstance(name, list) is False:
+        name = [name]
+    # special values
+    #TODO: type, and other special values
+    default = arg.get("default")
+    if default is not None:
+        default = utils.save_eval(default)
+    utils.set_if_value_not_none(arg, 'default', default)
+
+    parser.add_argument(*name, **arg)
+
 
 
 if __name__ == "__main__":
