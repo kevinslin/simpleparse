@@ -110,6 +110,20 @@ def store_action(name, action = None, **kwargs):
     set_if_value_not_none(out, 'help', kwargs.get('help'))
     return out
 
+### Bash related:
+def read_rc(fpath):
+    """
+    Read key value files from rc file
+    """
+    out = {}
+    with open(fpath) as fh:
+        for line in fh:
+            u = line.strip("\n").split("=")
+            u = [v.strip() for v in u]
+            if (len(u) > 1):
+                out[u[0]] = u[1]
+    return out
+
 
 ### MOVE:
 

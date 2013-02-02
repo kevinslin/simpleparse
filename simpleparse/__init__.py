@@ -39,7 +39,8 @@ def get_subparser(parser, **kwargs):
     help - help string
     """
     #TODO: check for special args in kwargs
-    _subparsers = parser.add_subparsers(**kwargs)
+    _subparsers = parser.add_subparsers(**
+            _process_kwargs(kwargs))
     return _subparsers
 
 
@@ -124,8 +125,6 @@ def _process_kwargs(kwargs):
         else:
             out[k] = v
     return out
-
-
 
 
 if __name__ == "__main__":
