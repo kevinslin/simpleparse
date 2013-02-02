@@ -1,10 +1,8 @@
 import unittest
 import simpleparse
 
-
 def foo(options):
     return "foo"
-
 
 class TestBaseClass(unittest.TestCase):
 
@@ -62,6 +60,7 @@ class TestBaseClass(unittest.TestCase):
 
     def tearDown(self):
         pass
+
 
 if __name__ == "__main__":
     unittest.main()
