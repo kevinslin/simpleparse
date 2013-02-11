@@ -3,10 +3,16 @@ This makes making command line arguments a lot easier
 """
 
 import argparse
+import os
+from os.path import join
 
 from simpleparse import settings
+from simplelog import log
+
 import utils
 import arguments
+
+__version__ = "0.1"
 
 SUBPARSERS = "SUBPARSERS"
 PARSER = "PARSER"
@@ -15,6 +21,24 @@ _parser = None
 _subparsers = None
 _subcommands = None
 
+
+### Utils
+
+def find_commands(management_dir):
+    """
+    Given a path to a management directory, returns a list of all the command
+    names that are available.
+
+    Returns an empty list if no commands are defined.
+    """
+    command_dir = os.path.join(management_dir, 'commands')
+    try:
+        return [f[:-3] for f in os.listdir(command_dir)
+                if not f.startswith('_') and f.endswith('.py')]
+    except OSError:
+        return []
+
+### parser
 
 def get_parser(**kwargs):
     """
@@ -58,7 +82,7 @@ def get_subcommands(subcmds):
     return _subcommands
 
 
-def setup_parser(**kwargs):
+def setup_parser(*args, **kwargs):
     """
     Bootstrap Parser
 
@@ -68,10 +92,18 @@ def setup_parser(**kwargs):
     subcommands - arguments for subparser
     funcs - dictionary of functions that subparsers will execute
     """
+    log(args)
     kwargs_parser = kwargs.get('parser', {})
     kwargs_subparser = kwargs.get('subparser', {})
     arg_subcommand = kwargs.get('subcommands', [])
     kwargs_funcs = kwargs.get('funcs', {})
+
+    if args:
+        root = os.path.dirname(os.path.abspath(args[0]))
+        _commands = find_commands(root)
+        log(_commands)
+        import imp
+        #TODO: import module
 
     parser = get_parser(**kwargs_parser)
     subparser = get_subparser(parser, **kwargs_subparser)
