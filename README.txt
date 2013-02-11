@@ -1,21 +1,35 @@
-Simplify Writing CLI Apps
+# Simplify Writing CLI Apps
+
+*DISCLAIMER: This is not yet ready for production, not in the slightest bit*
 
 Usage:
-simpleparse
+    from simpleparse import setup_parser
+    import commands
 
-parser = get_parser()
-parser.add_argument(...)
+    p = setup_parser(
+        parser = <parser>,
+        subcommands = <subcommands>,
+        funcs = vars(commands)
+        )
+    args = p.parse_args(sys.argv[1:])
+    if (args.fun):
+        args.fun(args)
+    else:
+        # custom implementation
+    # commands.py
 
-subparser = get_subparser()
+    def foo(options):
+        hello...
 
 
-parser = setup_parser()
+New Usage:
+    from simpleparse import setup_parser
+    p = setup_parser(__file__)
+    p.parse()
+    res = p.execute()
 
-
-commands.py
-
-def foo(options):
-    hello...
+By default, will look for parser and subparser in arguments.py
+Will import commands from "commands" inside module directory.
 
 
 arguments.py
