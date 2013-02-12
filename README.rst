@@ -3,39 +3,41 @@ Simplify Writing CLI Apps
 
 **DISCLAIMER: This is not yet ready for production, not in the slightest bit**
 
-Usage
------
+Old Usage
+---------
 
 .. code-block:: pycon
 
     from simpleparse import setup_parser
     import commands
 
-    p = setup_parser(
-        parser = <parser>,
-        subcommands = <subcommands>,
-        funcs = vars(commands)
-        )
-    args = p.parse_args(sys.argv[1:])
-    if (args.fun):
-        args.fun(args)
-    else:
-        # custom implementation
-    # commands.py
-
-    def foo(options):
-        hello...
-
+    def main():
+        p = setup_parser(
+            parser = <parser>,
+            subcommands = <subcommands>,
+            funcs = vars(commands)
+            )
+        args = p.parse_args(sys.argv[1:])
+        if (args.fun):
+            args.fun(args)
+    if __name__ == '__main__':
+        main()
 
 New Usage
 ---------
+** Still a work in progress **
 
 .. code-block:: pycon
 
     from simpleparse import setup_parser
-    p = setup_parser(__file__)
-    p.parse()
-    res = p.execute()
+
+    def main():
+        p = setup_parser(__file__)
+        p.parse()
+        res = p.execute()
+
+    if __name__ == '__main__':
+        main()
 
 By default, will look for parser and subparser in arguments.py
 Will import commands from "commands" inside module directory.
@@ -49,7 +51,7 @@ dictionaries
 .. code-block:: pycon
 
     from simpleparse import PARSER, SUBPARSERS
-    
+
     PARSER = [
         {
         }
