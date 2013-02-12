@@ -1,8 +1,13 @@
-# Simplify Writing CLI Apps
+Simplify Writing CLI Apps
+=========================
 
-*DISCLAIMER: This is not yet ready for production, not in the slightest bit*
+**DISCLAIMER: This is not yet ready for production, not in the slightest bit**
 
-Usage:
+Usage
+-----
+
+.. code-block:: pycon
+
     from simpleparse import setup_parser
     import commands
 
@@ -22,7 +27,11 @@ Usage:
         hello...
 
 
-New Usage:
+New Usage
+---------
+
+.. code-block:: pycon
+
     from simpleparse import setup_parser
     p = setup_parser(__file__)
     p.parse()
@@ -33,25 +42,25 @@ Will import commands from "commands" inside module directory.
 
 
 arguments.py
--------------
+------------
 This contains configuration for argument parsers as a list of
 dictionaries
 
-from simpleparse import PARSER, SUBPARSERS
+.. code-block:: pycon
 
-PARSER = [
-    {
-    }
-]
-SUBPARSERS = [
-    {
-    }
-]
+    from simpleparse import PARSER, SUBPARSERS
+    
+    PARSER = [
+        {
+        }
+    ]
+    SUBPARSERS = [
+        {
+        }
+    ]
 
 
 commands.py
-------------
+-----------
 This contains the commands executed by parser and subparser. By default,
 each command executes a function as the same name as the cmd
-
-
