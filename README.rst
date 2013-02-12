@@ -31,6 +31,7 @@ New Usage
 ---------
 
 .. code-block:: pycon
+
     from simpleparse import setup_parser
     p = setup_parser(__file__)
     p.parse()
@@ -46,16 +47,17 @@ This contains configuration for argument parsers as a list of
 dictionaries
 
 .. code-block:: pycon
-from simpleparse import PARSER, SUBPARSERS
 
-PARSER = [
-    \{
-    }
-]
-SUBPARSERS = [
-    \{
-    }
-]
+    from simpleparse import PARSER, SUBPARSERS
+    
+    PARSER = [
+        {
+        }
+    ]
+    SUBPARSERS = [
+        {
+        }
+    ]
 
 
 commands.py
