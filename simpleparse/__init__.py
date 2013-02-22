@@ -7,7 +7,6 @@ import os
 from os.path import join
 
 from simpleparse import settings
-from simplelog import log
 
 import utils
 import arguments
@@ -92,7 +91,6 @@ def setup_parser(*args, **kwargs):
     subcommands - arguments for subparser
     funcs - dictionary of functions that subparsers will execute
     """
-    log(args)
     kwargs_parser = kwargs.get('parser', {})
     kwargs_subparser = kwargs.get('subparser', {})
     arg_subcommand = kwargs.get('subcommands', [])
@@ -101,7 +99,6 @@ def setup_parser(*args, **kwargs):
     if args:
         root = os.path.dirname(os.path.abspath(args[0]))
         _commands = find_commands(root)
-        log(_commands)
         import imp
         #TODO: import module
 
